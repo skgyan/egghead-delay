@@ -2,6 +2,8 @@ Lets say we have a requirement to run a function after 1s, then 2s, then 3s.
 
 A quick way to write the run function is using  setTimeout. 
 
+we can take are required function as a callback within our runner and internally we can just use settimeout to call this callback after a second.
+
 It takes a callback. Sets up our settimeout to call it after 1s. And then we repeat this pattern for 2s and 3s. 
 
 Next we simply pass in a callback that logs the time when it gets called.
@@ -22,7 +24,10 @@ const run = (cb) => {
 run((time)=>console.log(time));
 ```
 
-This code does satisfy our requirement but you can see that the nesting adds a lot of noise that makes the intent slightly difficult to figure out. We can make this much easier with async/await. 
+If we run this code now we can see that it follows the specification correctly in that the callback is called after 1 second, 2 seconds  and then three seconds
+
+
+Even though it does satisfy our requirement you can see that the setTimeout nesting in our run function adds a lot of noise that makes the intent slightly difficult to figure out. We can make this much easier with async/await. 
 
 The only thing we need is a promise based dealy function, and that is very easy to write. It simply takes a number of `ms` and returns a Promise that gets resolved using setTimeout after the given number of ms
 
@@ -38,7 +43,7 @@ const runAsync = async (cb) => {
 }
 ```
 
-And inside the function we now get to use `await` to pause function execution till setTimeout resolves the promise
+And inside the function we now get to use `await` to pause function execution till the promise is resolved
 
 ```
   await delay(1000);
@@ -50,11 +55,7 @@ and then we call the callback passing in the time
 cb('1s');
 ```
 
-And we repeat this twice more, simply changing the argument to the callback. Now if we run this passin in the same callback is before, 
+And we repeat this twice more, simply changing the argument to the callback. 
 
-```
-runAsync((time) => console.log(time));
-```
 
-you can see that it behaves the same way. Its just more easier to read.
-
+now if we copy over the previous call to run and this time call run async if we go ahead and execute the file you can see that it still behanves the same in that the callback is called after 1s, 2seconds and then 3seconds, but this time the code is much simpler thanks to our promise based delay function and async await. 
